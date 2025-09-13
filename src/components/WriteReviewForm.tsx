@@ -37,10 +37,10 @@ const WriteReviewForm = ({ firmId, firmName, onClose }: WriteReviewFormProps) =>
       return;
     }
     
-    if (rating === 0 || !content.trim()) {
+    if (rating === 0 || !content.trim() || !reviewerName.trim()) {
       toast({
         title: "Error",
-        description: "Please provide a rating and review content.",
+        description: "Please provide your name, rating, and review content.",
         variant: "destructive"
       });
       return;
@@ -56,7 +56,7 @@ const WriteReviewForm = ({ firmId, firmName, onClose }: WriteReviewFormProps) =>
           rating,
           title: title.trim() || null,
           content: content.trim(),
-          reviewer_name: reviewerName.trim() || 'Anonymous'
+          reviewer_name: reviewerName.trim()
         });
 
       if (error) throw error;
@@ -137,14 +137,17 @@ const WriteReviewForm = ({ firmId, firmName, onClose }: WriteReviewFormProps) =>
 
             {/* Reviewer Name */}
             <div>
-              <label className="block text-gray-300 text-sm font-medium mb-2">
-                Your Name (optional)
+              <label htmlFor="reviewerName" className="block text-gray-300 text-sm font-medium mb-2 flex items-center gap-1">
+                Your Name <span className="text-red-500">*</span>
               </label>
               <Input
+                id="reviewerName"
                 value={reviewerName}
                 onChange={(e) => setReviewerName(e.target.value)}
-                placeholder="Leave blank to post as Anonymous"
+                placeholder="Enter your name"
                 className="bg-slate-600 border-slate-500 text-white"
+                required
+                aria-required="true"
               />
             </div>
 
@@ -179,7 +182,7 @@ const WriteReviewForm = ({ firmId, firmName, onClose }: WriteReviewFormProps) =>
             <div className="flex gap-2">
               <Button
                 type="submit"
-                disabled={isSubmitting || rating === 0 || !content.trim()}
+                disabled={isSubmitting || rating === 0 || !content.trim() || !reviewerName.trim()}
                 className="bg-blue-600 hover:bg-blue-700 text-white"
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Review'}
